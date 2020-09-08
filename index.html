@@ -2,8 +2,15 @@
 <html>
 
 <head>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
    <style>
+      body {
+         background-color: #CCCCCC;
+      }
+
       .bar {
          background-color: #000000;
          height: 0px;
@@ -16,9 +23,10 @@
       #rect {
          width: 1500px;
          height: 600px;
-         border: 3px solid #00FF00;
-         border-radius: 10px;
          margin: 0 auto;
+         border: 1px solid;
+         border-radius: 5px;
+         box-shadow: 10px 10px #888888;
 
       }
    </style>
@@ -26,12 +34,21 @@
 
 <body>
 
-   <input type="range" min="5" max="250" value="100" id="slider">
+   <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+      <a class="navbar-brand" href="#" style="color:aliceblue; font-family: sans-serif;">ALGO_visualiser</a>
+      <input type="range" min="5" max="250" value="100" id="slider">
 
-   <div id="rect">
+      <input id="btn-create" class="btn btn-outline-primary" onclick="create($('#slider').val() )" type="button"
+         value="CREATE">
+      <input type="button" class="btn btn-outline-primary" onclick="sort()" value="SORT" id="sort">
+
+   </nav>
+   <br /><br /><br />
+
+
+   <div id="rect" style="background-color:#FFFF">
    </div>
 
-   <input id="btn-create" onclick="create($('#slider').val() )" type="button" value="CREATE">
 
    <script>
 
@@ -47,7 +64,7 @@
          $("#rect").empty();
 
          size = Math.min(Math.floor(sze), $(window).width() * 0.4);
-         var arr = new Array(size);
+         window.arr = new Array(size);
 
          for (var i = 0; i < arr.length; i++)
             arr[i] = Math.floor((Math.random() * max_height) + 1);
@@ -62,8 +79,8 @@
             $("#rect").width($(window).width() * 0.8);
             $("#rect").height($(window).height() * 0.6);
 
-            var rect_width = $("#rect").width() - 2 * size;
-            var bar_width = rect_width / size;
+            window.rect_width = $("#rect").width() - 2 * size;
+            window.bar_width = rect_width / size;
             $(".bar").width(("" + bar_width + "px"));
          });
 
@@ -73,12 +90,37 @@
             $('#' + i).animate({ height: "" + arr[i] * 2 + "px" }, 1500);
 
          }
-
       }
 
+      function sort() {
+         for (var i = 0; i < window.arr.length; i++) {
+            for (var j = 0; j < window.arr.length - 1; j++)
+               if (window.arr[j] > window.arr[j + 1]) {
+                  move(j);
+               }
+         }
+      }
+
+      function move(i) {
+
+         var height1 = window.arr[i];
+         var height2 = window.arr[i + 1];
+
+         window.arr[i] = height2;
+         window.arr[i + 1] = height1;
+         $('#' + i).animate({ left: "" + (window.bar_width + 2) + "px" }, 1000);
+         $('#' + (i + 1)).animate({ right: "" + (window.bar_width + 2) + "px" }, 1000);
+      }
    </script>
 
 
+   <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"></script>
 </body>
 
 </html>
